@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { AuthLoading, Authenticated, Unauthenticated } from "convex/react";
 import RedirectToHome from "./_utils/RedirectToHome";
@@ -8,15 +8,15 @@ import Loader from "@/components/Loader";
 export default function Home() {
   return (
     <>
-    <AuthLoading>
-      <Loader/>
-    </AuthLoading>
-    <Authenticated>
-      <RedirectToHome />
-    </Authenticated>
-    <Unauthenticated>
-      <RedirectToSignIn/>
-    </Unauthenticated>
+      <AuthLoading>
+        <Loader />
+      </AuthLoading>
+      <Authenticated>
+        <RedirectToHome />
+      </Authenticated>
+      <Unauthenticated>
+        <RedirectToSignIn />
+      </Unauthenticated>
     </>
   );
 }

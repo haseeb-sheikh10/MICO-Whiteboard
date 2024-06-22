@@ -26,7 +26,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "convex/auth.config.js"
-, "node_modules/convex-client-provider.tsx"  ],
+    "convex/auth.config.js",
+    "node_modules/convex-client-provider.tsx"
+  ],
   "exclude": ["node_modules"]
 }

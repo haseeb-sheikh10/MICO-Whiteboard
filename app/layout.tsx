@@ -1,9 +1,9 @@
 import { ConvexClientProvider } from "@/providers/convex-client-provider";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const font = Poppins({ subsets: ["latin"], weight: ["400", "600"] });
 
 export const metadata: Metadata = {
   title: "Mico Whitboard",
@@ -17,10 +17,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <ConvexClientProvider>
-          {children}
-        </ConvexClientProvider>
+      <body className={font.className}>
+        <ConvexClientProvider>{children}</ConvexClientProvider>
       </body>
     </html>
   );

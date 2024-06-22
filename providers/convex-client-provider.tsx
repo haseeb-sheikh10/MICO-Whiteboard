@@ -15,11 +15,14 @@ export const ConvexClientProvider = ({
   children: React.ReactNode;
 }) => {
   return (
-    <ClerkProvider publishableKey={clerkKey} appearance={{
-      variables: {
-        colorPrimary: "#ff7d29"
-      }
-    }} >
+    <ClerkProvider
+      publishableKey={clerkKey}
+      appearance={{
+        variables: {
+          colorPrimary: "#ff7d29",
+        },
+      }}
+    >
       <ConvexProviderWithClerk useAuth={useAuth} client={convexClient}>
         {children}
       </ConvexProviderWithClerk>
