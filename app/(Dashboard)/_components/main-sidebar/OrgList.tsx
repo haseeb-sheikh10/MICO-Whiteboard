@@ -55,7 +55,8 @@ const OrgList = () => {
     },
   });
 
-  if (!userMemberships?.data?.length) return <Loader />;
+  if (!userMemberships?.data === undefined) return <Loader />;
+  if (!userMemberships?.data?.length) return null;
 
   return (
     <ul className="space-y-3 pb-3">
