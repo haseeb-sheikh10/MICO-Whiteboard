@@ -45,7 +45,7 @@ const BoardActions = ({
 
   const handleCopyLink = useCallback(() => {
     navigator.clipboard
-      .writeText(`${window.location.origin}/board/${id}`)
+      .writeText(`${window.location.origin}/whiteboard/${id}`)
       .then(() => toast.success("Link copied to clipboard"))
       .catch(() => toast.error("Failed to copy link to clipboard"));
   }, [id]);
