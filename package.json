@@ -1,5 +1,5 @@
 {
-  "name": "miro_board_app",
+  "name": "mico_whiteboard",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,6 +13,7 @@
     "@clerk/nextjs": "^5.1.6",
     "@clerk/themes": "^2.1.10",
     "@liveblocks/client": "^2.0.5",
+    "@liveblocks/node": "^2.0.5",
     "@liveblocks/react": "^2.0.5",
     "@radix-ui/react-alert-dialog": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.1",
@@ -22,7 +23,6 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "convex": "^1.12.2",
-    "convex-helpers": "^0.1.43",
     "date-fns": "^3.6.0",
     "lucide-react": "^0.396.0",
     "next": "14.2.4",

@@ -111,6 +111,16 @@ export const get = query({
   },
 });
 
+export const single = query({
+  args: {
+    id: v.id("boards"),
+  },
+  handler: async (ctx, args) => {
+    const board = await ctx.db.get(args.id);
+    return board;
+  },
+});
+
 export const remove = mutation({
   args: {
     id: v.id("boards"),
