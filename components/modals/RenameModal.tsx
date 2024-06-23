@@ -35,7 +35,7 @@ const RenameModal = () => {
       mutate({ id: initialValues?.id, title })
         .then(() => {
           onClose();
-          toast.success(`Board "${title}" updated successfully`);
+          toast.success(`"${title}" updated successfully`);
         })
         .catch((err) => {
           toast.error(err.message || "Failed to update board title");

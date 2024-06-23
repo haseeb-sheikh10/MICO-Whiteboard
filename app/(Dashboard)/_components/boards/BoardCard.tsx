@@ -1,16 +1,15 @@
 import Overlay from "@/components/Overlay";
+import BoardActions from "@/components/actions/BoardActions";
+import { api } from "@/convex/_generated/api";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { cn } from "@/lib/utils";
 import { useAuth } from "@clerk/clerk-react";
-import Image from "next/image";
-import Link from "next/link";
-import React, { useCallback } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { MoreHorizontal, Star } from "lucide-react";
-import { cn } from "@/lib/utils";
-import BoardActions from "@/components/actions/BoardActions";
-import { useApiMutation } from "@/hooks/useApiMutation";
-import { api } from "@/convex/_generated/api";
+import Image from "next/image";
+import Link from "next/link";
+import { useCallback } from "react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 interface BoardCardProps {
   _id: string;
@@ -69,7 +68,6 @@ const Footer = ({
 
 const BoardCard = (props: BoardCardProps) => {
   const { userId } = useAuth();
-  const router = useRouter();
 
   const authorLabel = userId === props.authorId ? "You" : props.authorName;
   const createdAt = formatDistanceToNow(props?._creationTime, {
@@ -101,33 +99,32 @@ const BoardCard = (props: BoardCardProps) => {
   );
 
   return (
-    <div
-      onClick={() => router.push(`/whiteboard/${props?._id}`)}
-      className="group aspect-[100/127] border rounded-lg flex flex-col justify-between overflow-hidden cursor-pointer"
-    >
-      <div className="relative flex-1 bg-amber-50">
-        {props?.imageUrl && (
-          <Image
-            src={props.imageUrl}
-            alt={props.title}
-            fill
-            className="object-fit"
-          />
-        )}
-        <Overlay />
-        <BoardActions id={props?._id} title={props.title}>
-          <MoreHorizontal className="text-white opacity-0 group-hover:opacity-100 transition-opacity absolute top-1 right-1" />
-        </BoardActions>
+    <Link href={`/whiteboard/${props._id}`}>
+      <div className="group aspect-[100/127] border rounded-lg flex flex-col justify-between overflow-hidden cursor-pointer">
+        <div className="relative flex-1 bg-amber-50">
+          {props?.imageUrl && (
+            <Image
+              src={props.imageUrl}
+              alt={props.title}
+              fill
+              className="object-fit"
+            />
+          )}
+          <Overlay />
+          <BoardActions id={props?._id} title={props.title}>
+            <MoreHorizontal className="text-white opacity-0 group-hover:opacity-100 transition-opacity absolute top-1 right-1" />
+          </BoardActions>
+        </div>
+        <Footer
+          isFavorite={props.isFavorite}
+          title={props.title}
+          author={authorLabel}
+          createdAt={createdAt}
+          onClick={toggleFavorite}
+          disabled={pending}
+        />
       </div>
-      <Footer
-        isFavorite={props.isFavorite}
-        title={props.title}
-        author={authorLabel}
-        createdAt={createdAt}
-        onClick={toggleFavorite}
-        disabled={pending}
-      />
-    </div>
+    </Link>
   );
 };
 
