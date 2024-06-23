@@ -5,7 +5,7 @@ import ShowSwitcher from "./ShowSwitcher";
 
 const OrgSidebar = () => {
   return (
-    <aside className="hidden lg:flex h-screen flex-col w-60 px-5 py-3">
+    <aside className="hidden md:flex h-screen flex-col w-60 px-5 py-3 border-r">
       <Link href="/">
         <div className="flex justify-center items-center gap-x-1">
           <Image src="/only_logo.svg" width={60} height={60} alt="LOGO" />

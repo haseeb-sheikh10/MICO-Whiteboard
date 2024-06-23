@@ -15,10 +15,10 @@ const ShowSwitcher = () => {
         hidePersonal
         appearance={{
           elements: {
-            rootBox: "w-full",
+            rootBox: "w-full max-w-[480px]",
             cardBox: "max-w-[480px]",
             organizationSwitcherTrigger:
-              "p-[6px] w-full flex-1 justify-between items-center rounded-[8px] border border-[#e5e7eb] bg-white",
+              "p-[6px] w-full max-w-[480px] flex-1 justify-between items-center rounded-md border border-[#e5e7eb] bg-white",
           },
         }}
       />
@@ -26,10 +26,10 @@ const ShowSwitcher = () => {
         <Button
           asChild
           variant={favorites ? "ghost" : "secondary"}
-          size="lg"
+          size="sm"
           className="justify-start items-center font-normal px-2 w-full"
         >
-          <Link href="/home">
+          <Link href="/dashboard">
             <LayoutDashboard className="w-4 h-4 mr-2" />
             Team Boards
           </Link>
@@ -37,12 +37,12 @@ const ShowSwitcher = () => {
         <Button
           asChild
           variant={favorites ? "secondary" : "ghost"}
-          size="lg"
+          size="sm"
           className="justify-start items-center font-normal px-2 w-full"
         >
           <Link
             href={{
-              pathname: "/home",
+              pathname: "/dashboard",
               query: { favorites: true },
             }}
           >

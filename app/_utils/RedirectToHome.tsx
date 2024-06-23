@@ -7,7 +7,7 @@ const RedirectToHome = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/home");
+    router.push("/dashboard");
   }, [router]);
 
   return null;
