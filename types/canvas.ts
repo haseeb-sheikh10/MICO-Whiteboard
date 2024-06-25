@@ -21,7 +21,7 @@ export type XYWH = {
   height: number;
 };
 
-export enum Layer {
+export enum LayerType {
   Rectangle,
   Ellipse,
   Path,
@@ -30,7 +30,7 @@ export enum Layer {
 }
 
 export type RectangleLayer = {
-  type: Layer.Rectangle;
+  type: LayerType.Rectangle;
   x: number;
   y: number;
   height: number;
@@ -40,7 +40,7 @@ export type RectangleLayer = {
 };
 
 export type EllipseLayer = {
-  type: Layer.Ellipse;
+  type: LayerType.Ellipse;
   x: number;
   y: number;
   height: number;
@@ -50,7 +50,7 @@ export type EllipseLayer = {
 };
 
 export type PathLayer = {
-  type: Layer.Path;
+  type: LayerType.Path;
   x: number;
   y: number;
   height: number;
@@ -61,7 +61,7 @@ export type PathLayer = {
 };
 
 export type TextLayer = {
-  type: Layer.Text;
+  type: LayerType.Text;
   x: number;
   y: number;
   height: number;
@@ -71,7 +71,7 @@ export type TextLayer = {
 };
 
 export type NoteLayer = {
-  type: Layer.Note;
+  type: LayerType.Note;
   x: number;
   y: number;
   height: number;
@@ -116,7 +116,7 @@ export type CanvasState =
     }
   | {
       mode: CanvasMode.Inserting;
-      layerType: Layer.Ellipse | Layer.Rectangle | Layer.Text | Layer.Note;
+      layerType: InsertLayers;
     }
   | {
       mode: CanvasMode.Resizing;
@@ -126,3 +126,16 @@ export type CanvasState =
   | {
       mode: CanvasMode.Pencil;
     };
+
+export type Layers =
+  | RectangleLayer
+  | EllipseLayer
+  | TextLayer
+  | NoteLayer
+  | PathLayer;
+
+export type InsertLayers =
+  | LayerType.Rectangle
+  | LayerType.Ellipse
+  | LayerType.Text
+  | LayerType.Note;

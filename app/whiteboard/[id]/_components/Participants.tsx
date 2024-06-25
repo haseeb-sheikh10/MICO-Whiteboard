@@ -1,9 +1,9 @@
 "use client";
 
+import { randomColor } from "@/lib/utils";
 import { useOthers, useSelf } from "@/liveblocks.config";
 import { useMemo } from "react";
 import UserAvatar from "./UserAvatar";
-import { randomColor } from "@/lib/utils";
 
 const MAX_SHOWN_USERS = 2;
 

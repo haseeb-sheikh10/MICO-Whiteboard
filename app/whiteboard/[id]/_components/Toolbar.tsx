@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { useMemo } from "react";
 import ToolButton from "./ToolButton";
-import { CanvasMode, CanvasState, Layer } from "@/types/canvas";
+import { CanvasMode, CanvasState, LayerType } from "@/types/canvas";
 
 interface ToolbarProps {
   canvasState: CanvasState;
@@ -51,11 +51,11 @@ const Toolbar = ({
         onClick: () =>
           setCanvasState({
             mode: CanvasMode.Inserting,
-            layerType: Layer.Text,
+            layerType: LayerType.Text,
           }),
         isActive:
           CanvasMode.Inserting === canvasState.mode &&
-          Layer.Text === canvasState.layerType,
+          LayerType.Text === canvasState.layerType,
       },
       {
         label: "Sticky Note",
@@ -63,11 +63,11 @@ const Toolbar = ({
         onClick: () =>
           setCanvasState({
             mode: CanvasMode.Inserting,
-            layerType: Layer.Note,
+            layerType: LayerType.Note,
           }),
         isActive:
           CanvasMode.Inserting === canvasState.mode &&
-          Layer.Note === canvasState.layerType,
+          LayerType.Note === canvasState.layerType,
       },
       {
         label: "Rectangle",
@@ -75,11 +75,11 @@ const Toolbar = ({
         onClick: () =>
           setCanvasState({
             mode: CanvasMode.Inserting,
-            layerType: Layer.Rectangle,
+            layerType: LayerType.Rectangle,
           }),
         isActive:
           CanvasMode.Inserting === canvasState.mode &&
-          Layer.Rectangle === canvasState.layerType,
+          LayerType.Rectangle === canvasState.layerType,
       },
       {
         label: "Ellipse",
@@ -87,11 +87,11 @@ const Toolbar = ({
         onClick: () =>
           setCanvasState({
             mode: CanvasMode.Inserting,
-            layerType: Layer.Ellipse,
+            layerType: LayerType.Ellipse,
           }),
         isActive:
           CanvasMode.Inserting === canvasState.mode &&
-          Layer.Ellipse === canvasState.layerType,
+          LayerType.Ellipse === canvasState.layerType,
       },
       {
         label: "Pen",
