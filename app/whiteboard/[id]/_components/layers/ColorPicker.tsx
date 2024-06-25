@@ -23,11 +23,11 @@ interface ColorButtonProps {
 export const ColorButton = ({ color, onClick }: ColorButtonProps) => {
   return (
     <button
-      className="w-6 h-6 items-center justify-center hover:opacity-75 transition"
+      className="w-8 h-8 items-center justify-center hover:opacity-75 transition"
       onClick={() => onClick(color)}
     >
       <div
-        className="w-6 h-6 rounded-full border border-neutral-300"
+        className="w-8 h-8 rounded-full border border-neutral-300"
         style={{
           background: `rgb(${color.r}, ${color.g}, ${color.b})`,
         }}

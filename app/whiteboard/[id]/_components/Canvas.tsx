@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  findIntersectingLayersWithRectangle,
   pointerEventToCanvasPoint,
   randomColor,
   resizeBounds,
@@ -29,6 +30,7 @@ import {
   PointerEventHandler,
   WheelEvent,
   WheelEventHandler,
+  memo,
   useCallback,
   useMemo,
   useState,
@@ -141,6 +143,35 @@ const Canvas = ({ boardId }: { boardId: string }) => {
     [canvasState],
   );
 
+  const startMultiSelection = useCallback((current: Point, origin: Point) => {
+    if (Math.abs(current.x - origin.x) + Math.abs(current.y - origin.y) > 5) {
+      setCanvasState({
+        mode: CanvasMode.SelectionNet,
+        origin,
+        current,
+      });
+    }
+  }, []);
+
+  const updateSelectionNet = useMutation(
+    ({ storage, setMyPresence }, current: Point, origin: Point) => {
+      const layers = storage.get("layers").toImmutable();
+      setCanvasState({
+        mode: CanvasMode.SelectionNet,
+        origin: origin,
+        current,
+      });
+      const ids = findIntersectingLayersWithRectangle(
+        layerIds,
+        layers,
+        origin,
+        current,
+      );
+      setMyPresence({ selection: ids });
+    },
+    [layerIds],
+  );
+
   const unselectLayers = useMutation(({ self, setMyPresence }) => {
     if (self.presence.selection.length > 0) {
       setMyPresence({ selection: [] }, { addToHistory: true });
@@ -173,7 +204,11 @@ const Canvas = ({ boardId }: { boardId: string }) => {
       e.preventDefault();
       const current = pointerEventToCanvasPoint(e, camera);
 
-      if (canvasState.mode === CanvasMode.Translating) {
+      if (canvasState.mode === CanvasMode.Pressing) {
+        startMultiSelection(current, canvasState.origin);
+      } else if (canvasState.mode === CanvasMode.SelectionNet) {
+        updateSelectionNet(current, canvasState.origin);
+      } else if (canvasState.mode === CanvasMode.Translating) {
         translateSelectedLayer(current);
       } else if (canvasState.mode === CanvasMode.Resizing) {
         resizeSelectedLayer(current);
@@ -182,7 +217,14 @@ const Canvas = ({ boardId }: { boardId: string }) => {
         cursor: current,
       });
     },
-    [camera, canvasState, resizeSelectedLayer, translateSelectedLayer],
+    [
+      camera,
+      canvasState,
+      resizeSelectedLayer,
+      translateSelectedLayer,
+      updateSelectionNet,
+      startMultiSelection,
+    ],
   );
 
   const onPointerLeave = useMutation(
@@ -215,10 +257,24 @@ const Canvas = ({ boardId }: { boardId: string }) => {
     [camera, canvasState, insertLayer, history, unselectLayers],
   );
 
+  const onPointerDown = useMutation(
+    ({ setMyPresence }, e: PointerEvent<SVGSVGElement>) => {
+      e.preventDefault();
+      const current = pointerEventToCanvasPoint(e, camera);
+
+      if (canvasState.mode === CanvasMode.Inserting) return null;
+
+      //TODO: handle pencil mode
+
+      setCanvasState({ mode: CanvasMode.Pressing, origin: current });
+    },
+    [camera, canvasState.mode],
+  );
+
   const onLayerPointerDown = useMutation(
     (
       { self, setMyPresence },
-      e: PointerEvent<SVGRectElement>,
+      e: PointerEvent<SVGRectElement | SVGEllipseElement>,
       layerId: string,
     ) => {
       if (
@@ -289,6 +345,7 @@ const Canvas = ({ boardId }: { boardId: string }) => {
         onPointerMove={onPointerMove}
         onPointerLeave={onPointerLeave}
         onPointerUp={onPointerUp}
+        onPointerDown={onPointerDown}
         onWheel={onWheel}
         className="h-[100vh] w-[100vw]"
       >
@@ -306,6 +363,17 @@ const Canvas = ({ boardId }: { boardId: string }) => {
             />
           ))}
           <SelectionBox onResizeHandlePointerDown={onResizeHandlePointerDown} />
+          {canvasState.mode === CanvasMode.SelectionNet &&
+            canvasState.current != null && (
+              <rect
+                className="fill-primary stroke-primary stroke-1"
+                x={Math.min(canvasState.origin.x, canvasState.current.x)}
+                y={Math.min(canvasState.origin.y, canvasState.current.y)}
+                width={Math.abs(canvasState.origin.x - canvasState.current.x)}
+                height={Math.abs(canvasState.origin.y - canvasState.current.y)}
+                fillOpacity={0.05}
+              />
+            )}
           <CursorPresence />
         </g>
       </svg>
@@ -313,4 +381,4 @@ const Canvas = ({ boardId }: { boardId: string }) => {
   );
 };
 
-export default Canvas;
+export default memo(Canvas);

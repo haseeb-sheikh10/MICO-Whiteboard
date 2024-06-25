@@ -1,4 +1,4 @@
-import { Camera, Point, Side, XYWH } from "@/types/canvas";
+import { Camera, Layers, Point, Side, XYWH } from "@/types/canvas";
 import { type ClassValue, clsx } from "clsx";
 import { PointerEvent } from "react";
 import { twMerge } from "tailwind-merge";
@@ -23,7 +23,7 @@ export const randomColor = (connectionId: number) => {
 };
 
 export const pointerEventToCanvasPoint = (
-  e: PointerEvent<SVGSVGElement | SVGRectElement>,
+  e: PointerEvent<SVGSVGElement | SVGRectElement | SVGEllipseElement>,
   camera: Camera,
 ) => {
   return {
@@ -66,3 +66,54 @@ export const resizeBounds = (
 
   return result;
 };
+
+export const findIntersectingLayersWithRectangle = (
+  layerIds: readonly string[],
+  layers: ReadonlyMap<string, Layers>,
+  a: Point,
+  b: Point,
+) => {
+  const rect = {
+    x: Math.min(a.x, b.x),
+    y: Math.min(a.y, b.y),
+    width: Math.abs(a.x - b.x),
+    height: Math.abs(a.y - b.y),
+  };
+
+  const ids = [];
+
+  for (const layerId of layerIds) {
+    const layer = layers.get(layerId);
+    if (layer == null) {
+      continue;
+    }
+
+    const { x, y, height, width } = layer;
+    if (
+      rect.x + rect.width > x &&
+      rect.x < x + width &&
+      rect.y + rect.height > y &&
+      rect.y < y + height
+    ) {
+      ids.push(layerId);
+    }
+  }
+
+  return ids;
+};
+
+// export const findIntersectingLayerWithPoint = (
+//   layerIds: string[],
+//   layers: Map<string, Layer>,
+//   point: Point,
+// ) => {
+//   for (let i = layerIds.length - 1; i >= 0; i--) {
+//     const layerId = layerIds[i];
+//     const layer = layers.get(layerId);
+//     if (layer && isHittingLayer(layer, point)) {
+//       return layerId;
+//     }
+//   }
+
+//   return null;
+// };

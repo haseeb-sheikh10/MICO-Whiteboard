@@ -10,7 +10,9 @@ interface SelectionBoxProps {
 const HANDLE_WIDTH = 8;
 
 const SelectionBox = ({ onResizeHandlePointerDown }: SelectionBoxProps) => {
-  const selectedLayer = useSelf((me) => me.presence.selection[0]);
+  const selectedLayer = useSelf((me) =>
+    me.presence.selection.length === 1 ? me.presence.selection[0] : null,
+  );
   const isShowingHandles = useStorage(
     (root) =>
       selectedLayer && root.layers.get(selectedLayer)?.type !== LayerType.Path,

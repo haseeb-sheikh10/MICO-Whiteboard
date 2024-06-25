@@ -1,11 +1,11 @@
+import Hint from "@/components/Hint";
+import { Button } from "@/components/ui/button";
+import { useDeleteLayers } from "@/hooks/useDeleteLayers";
 import { useSelectionBounds } from "@/hooks/useSelectionBounds";
 import { useMutation, useSelf } from "@/liveblocks.config";
 import { Camera, Color } from "@/types/canvas";
-import React from "react";
+import { BringToFront, SendToBack, Trash } from "lucide-react";
 import { ColorPicker } from "./ColorPicker";
-import { useDeleteLayers } from "@/hooks/useDeleteLayers";
-import { Trash } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface SelectionToolsProps {
   camera: Camera;
@@ -37,6 +37,49 @@ const SelectionTools = ({
 
   const deleteLayers = useDeleteLayers();
 
+  const moveToFront = useMutation(
+    ({ storage }) => {
+      const liveLayerIds = storage.get("layerIds");
+      const indices: number[] = [];
+
+      const arr = liveLayerIds.toArray();
+
+      for (let i = 0; i < arr.length; i++) {
+        if (selections.includes(arr[i])) {
+          indices.push(i);
+        }
+      }
+
+      for (let i = indices.length - 1; i >= 0; i--) {
+        liveLayerIds.move(
+          indices[i],
+          arr.length - 1 - (indices.length - 1 - i),
+        );
+      }
+    },
+    [selections],
+  );
+
+  const moveToBack = useMutation(
+    ({ storage }) => {
+      const liveLayerIds = storage.get("layerIds");
+      const indices: number[] = [];
+
+      const arr = liveLayerIds.toArray();
+
+      for (let i = 0; i < arr.length; i++) {
+        if (selections.includes(arr[i])) {
+          indices.push(i);
+        }
+      }
+
+      for (let i = 0; i < indices.length; i++) {
+        liveLayerIds.move(indices[i], i);
+      }
+    },
+    [selections],
+  );
+
   const selectionBounds = useSelectionBounds();
 
   if (!selections || !selectionBounds) return null;
@@ -55,14 +98,28 @@ const SelectionTools = ({
       className="absolute p-3 rounded-xl bg-white shadow-sm border flex items-center select-none"
     >
       <ColorPicker onChange={handleChangeShapeColor} />
-      <Button
-        size="icon"
-        variant="ghost"
-        className="text-red-500 hover:bg-red-50 hover:text-red-500"
-        onClick={deleteLayers}
-      >
-        <Trash className="w-6 h-6" />
-      </Button>
+      <div className="flex flex-col items-center gap-y-0.5">
+        <Hint label="Bring to front">
+          <Button variant="board" size="icon" onClick={moveToFront}>
+            <BringToFront className="w-5 h-5" />
+          </Button>
+        </Hint>
+        <Hint label="send to back" side="bottom">
+          <Button variant="board" size="icon" onClick={moveToBack}>
+            <SendToBack className="w-5 h-5" />
+          </Button>
+        </Hint>
+      </div>
+      <Hint label="Delete">
+        <Button
+          size="icon"
+          variant="ghost"
+          className="text-red-500 hover:bg-red-50 hover:text-red-500"
+          onClick={deleteLayers}
+        >
+          <Trash className="w-6 h-6" />
+        </Button>
+      </Hint>
     </div>
   );
 };

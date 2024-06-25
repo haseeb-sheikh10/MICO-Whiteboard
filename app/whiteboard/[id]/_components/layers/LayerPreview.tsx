@@ -2,11 +2,12 @@ import { useStorage } from "@/liveblocks.config";
 import { LayerType } from "@/types/canvas";
 import React, { PointerEvent } from "react";
 import Rectangle from "./Rectangle";
+import Ellipse from "./Ellipse";
 
 interface LayerPreviewProps {
   id: string;
   onLayerPointerDown: (
-    e: PointerEvent<SVGRectElement>,
+    e: PointerEvent<SVGRectElement | SVGEllipseElement>,
     layerId: string,
   ) => void;
   selectionColor?: string;
@@ -25,6 +26,15 @@ const LayerPreview = ({
     case LayerType.Rectangle:
       return (
         <Rectangle
+          id={id}
+          layer={layer}
+          onLayerPointerDown={onLayerPointerDown}
+          selectionColor={selectionColor}
+        />
+      );
+    case LayerType.Ellipse:
+      return (
+        <Ellipse
           id={id}
           layer={layer}
           onLayerPointerDown={onLayerPointerDown}
