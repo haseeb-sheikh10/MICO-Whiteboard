@@ -9,6 +9,7 @@ const Loader = () => {
         alt="MICO WHITEBOARD LOGO"
         width={100}
         height={100}
+        unoptimized
       />
     </div>
   );

@@ -1,4 +1,13 @@
-import { Camera, Layers, Point, Side, XYWH } from "@/types/canvas";
+import {
+  Camera,
+  Color,
+  LayerType,
+  Layers,
+  PathLayer,
+  Point,
+  Side,
+  XYWH,
+} from "@/types/canvas";
 import { type ClassValue, clsx } from "clsx";
 import { PointerEvent } from "react";
 import { twMerge } from "tailwind-merge";
@@ -23,13 +32,30 @@ export const randomColor = (connectionId: number) => {
 };
 
 export const pointerEventToCanvasPoint = (
-  e: PointerEvent<SVGSVGElement | SVGRectElement | SVGEllipseElement>,
+  e: PointerEvent<
+    SVGSVGElement | SVGRectElement | SVGEllipseElement | SVGForeignObjectElement
+  >,
   camera: Camera,
 ) => {
   return {
     x: Math.round(e.clientX) - camera.x,
     y: Math.round(e.clientY) - camera.y,
   };
+};
+
+export const calculateFontSize = (
+  width: number,
+  height: number,
+  scaleFactor: number,
+) => {
+  const maxFontSize = 96;
+  return Math.min(width * scaleFactor, height * scaleFactor, maxFontSize);
+};
+
+export const getContrastingTextColor = (color: Color) => {
+  const luminance = 0.299 * color.r + 0.587 * color.g + 0.114 * color.b;
+
+  return luminance > 182 ? "black" : "white";
 };
 
 export const resizeBounds = (
@@ -117,3 +143,57 @@ export const findIntersectingLayersWithRectangle = (
 
 //   return null;
 // };
+
+export const penPointsToPathLayer = (
+  points: number[][] | null,
+  color: Color,
+): PathLayer | null => {
+  if (!points) return null;
+
+  let left = Number.POSITIVE_INFINITY;
+  let top = Number.POSITIVE_INFINITY;
+  let right = Number.NEGATIVE_INFINITY;
+  let bottom = Number.NEGATIVE_INFINITY;
+
+  for (const point of points) {
+    const [x, y] = point;
+    if (left > x) {
+      left = x;
+    }
+    if (top > y) {
+      top = y;
+    }
+    if (right < x) {
+      right = x;
+    }
+    if (bottom < y) {
+      bottom = y;
+    }
+  }
+
+  return {
+    type: LayerType.Path,
+    x: left,
+    y: top,
+    width: right - left,
+    height: bottom - top,
+    fill: color,
+    points: points.map(([x, y, pressure]) => [x - left, y - top, pressure]),
+  };
+};
+
+export const getSvgPathFromStroke = (stroke: number[][]) => {
+  if (!stroke.length) return "";
+
+  const d = stroke.reduce(
+    (acc, [x0, y0], i, arr) => {
+      const [x1, y1] = arr[(i + 1) % arr.length];
+      acc.push(x0, y0, (x0 + x1) / 2, (y0 + y1) / 2);
+      return acc;
+    },
+    ["M", ...stroke[0], "Q"],
+  );
+
+  d.push("Z");
+  return d.join(" ");
+};

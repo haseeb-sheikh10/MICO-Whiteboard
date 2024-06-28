@@ -116,7 +116,11 @@ export type CanvasState =
     }
   | {
       mode: CanvasMode.Inserting;
-      layerType: InsertLayers;
+      layerType:
+        | LayerType.Text
+        | LayerType.Note
+        | LayerType.Rectangle
+        | LayerType.Ellipse;
     }
   | {
       mode: CanvasMode.Resizing;
@@ -133,9 +137,3 @@ export type Layers =
   | TextLayer
   | NoteLayer
   | PathLayer;
-
-export type InsertLayers =
-  | LayerType.Rectangle
-  | LayerType.Ellipse
-  | LayerType.Text
-  | LayerType.Note;
