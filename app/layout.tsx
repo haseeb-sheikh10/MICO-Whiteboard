@@ -4,6 +4,8 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import ModalProvider from "@/providers/modal-provider";
+import { Suspense } from "react";
+import Loader from "@/components/Loader";
 
 const font = Poppins({ subsets: ["latin"], weight: ["400", "600"] });
 
@@ -20,16 +22,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={font.className}>
-        <ConvexClientProvider>
-          {children}
-          <ModalProvider />
-          <Toaster
-            theme="light"
-            richColors
-            expand={true}
-            position="bottom-right"
-          />
-        </ConvexClientProvider>
+        <Suspense fallback={<Loader />}>
+          <ConvexClientProvider>
+            {children}
+            <ModalProvider />
+            <Toaster
+              theme="light"
+              richColors
+              expand={true}
+              position="bottom-right"
+            />
+          </ConvexClientProvider>
+        </Suspense>
       </body>
     </html>
   );
