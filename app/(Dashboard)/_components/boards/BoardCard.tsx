@@ -79,6 +79,7 @@ const BoardCard = (props: BoardCardProps) => {
   const toggleFavorite = useCallback(
     (e: any) => {
       e.stopPropagation();
+      e.preventDefault();
       if (!props._id || !props.orgId) return;
 
       mutate({
